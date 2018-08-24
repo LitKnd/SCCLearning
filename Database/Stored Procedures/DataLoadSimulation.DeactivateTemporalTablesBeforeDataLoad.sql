@@ -12,9 +12,11 @@ AS BEGIN
     BEGIN
         EXEC [Application].Configuration_RemoveRowLevelSecurity;
     END;
+
+    --Change log: consistent case on @CRLF
  
     DECLARE @SQL nvarchar(max) = N'';
-    DECLARE @CrLf nvarchar(2) = NCHAR(13) + NCHAR(10);
+    DECLARE @CRLF nvarchar(2) = NCHAR(13) + NCHAR(10);
     DECLARE @Indent nvarchar(4) = N'    ';
     DECLARE @SchemaName sysname;
     DECLARE @TableName sysname;
@@ -88,26 +90,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -125,26 +127,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -162,26 +164,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -199,26 +201,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -236,26 +238,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -273,26 +275,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -310,26 +312,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -347,26 +349,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -384,26 +386,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -421,26 +423,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -458,26 +460,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -495,26 +497,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -532,26 +534,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -569,26 +571,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -606,26 +608,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -643,26 +645,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
@@ -680,26 +682,26 @@ AS BEGIN
     SET @SQL = N'DROP TRIGGER IF EXISTS ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify];'
     EXECUTE (@SQL);
  
-    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CrLf
-              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CrLf
-              + N'AFTER INSERT, UPDATE' + @CrLf
-              + N'AS' + @CrLf
-              + N'BEGIN' + @CrLf
-              + @Indent + N'SET NOCOUNT ON;' + @CrLf + @CrLf
-              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CrLf
-              + @Indent + N'BEGIN' + @CrLf
+    SET @SQL = N'CREATE TRIGGER ' + QUOTENAME(@SchemaName) + N'.[TR_' + @SchemaName + N'_' + @TableName + N'_DataLoad_Modify]' + @CRLF
+              + N'ON ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName) + @CRLF
+              + N'AFTER INSERT, UPDATE' + @CRLF
+              + N'AS' + @CRLF
+              + N'BEGIN' + @CRLF
+              + @Indent + N'SET NOCOUNT ON;' + @CRLF + @CRLF
+              + @Indent + N'IF NOT UPDATE(' + QUOTENAME(@TemporalFromColumnName) + N')' + @CRLF
+              + @Indent + N'BEGIN' + @CRLF
               + @Indent + @Indent + N'THROW 51000, ''' + QUOTENAME(@TemporalFromColumnName)
-                                  + N' must be updated when simulating data loads'', 1;' + @CrLf
-              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CrLf
-              + @Indent + N'END;' + @Crlf + @CrLf
-              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CrLf
+                                  + N' must be updated when simulating data loads'', 1;' + @CRLF
+              + @Indent + @Indent + N'ROLLBACK TRAN;' + @CRLF
+              + @Indent + N'END;' + @CRLF + @CRLF
+              + @Indent + N'INSERT ' + QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@TableName + N'_' + @TemporalTableSuffix) + @CRLF
               + @Indent + @Indent + N'(' + @NormalColumnList + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CrLf
+                                  + QUOTENAME(@TemporalFromColumnName) + N',' + QUOTENAME(@TemporalToColumnName) + N')' + @CRLF
               + @Indent + N'SELECT' + @NormalColumnListWithDPrefix + CASE WHEN COALESCE(@LastEditedByColumnName, N'') <> N'' THEN N'd.' + QUOTENAME(@LastEditedByColumnName) + N', ' ELSE N'' END
-                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CrLf
-              + @Indent + N'FROM inserted AS i' + @CrLf
-              + @Indent + N'INNER JOIN deleted AS d' + @CrLf
-              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CrLf
+                                  + N' d.' + QUOTENAME(@TemporalFromColumnName) + N', i.' + QUOTENAME(@TemporalFromColumnName) + @CRLF
+              + @Indent + N'FROM inserted AS i' + @CRLF
+              + @Indent + N'INNER JOIN deleted AS d' + @CRLF
+              + @Indent + N'ON i.' + QUOTENAME(@PrimaryKeyColumn) + N' = d.' + QUOTENAME(@PrimaryKeyColumn) + N';' + @CRLF
               + N'END;';
     IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = @TableName AND is_memory_optimized <> 0)
     BEGIN
