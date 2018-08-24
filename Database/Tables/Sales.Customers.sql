@@ -30,7 +30,8 @@ CREATE TABLE [Sales].[Customers_Archive]
 [PostalPostalCode] [nvarchar] (10) COLLATE Latin1_General_100_CI_AS NOT NULL,
 [LastEditedBy] [int] NOT NULL,
 [ValidFrom] [datetime2] NOT NULL,
-[ValidTo] [datetime2] NOT NULL
+[ValidTo] [datetime2] NOT NULL,
+[Twitter] [nvarchar] (256) COLLATE Latin1_General_100_CI_AS NULL
 ) ON [USERDATA]
 WITH
 (
@@ -72,6 +73,7 @@ CREATE TABLE [Sales].[Customers]
 [LastEditedBy] [int] NOT NULL,
 [ValidFrom] [datetime2] GENERATED ALWAYS AS ROW START NOT NULL,
 [ValidTo] [datetime2] GENERATED ALWAYS AS ROW END NOT NULL,
+[Twitter] [nvarchar] (256) COLLATE Latin1_General_100_CI_AS NULL,
 PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo),
 CONSTRAINT [PK_Sales_Customers] PRIMARY KEY CLUSTERED  ([CustomerID]) ON [USERDATA]
 ) ON [USERDATA]

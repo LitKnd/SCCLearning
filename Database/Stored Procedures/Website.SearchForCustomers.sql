@@ -16,7 +16,8 @@ BEGIN
            c.PhoneNumber,
            c.FaxNumber,
            p.FullName AS PrimaryContactFullName,
-           p.PreferredName AS PrimaryContactPreferredName
+           p.PreferredName AS PrimaryContactPreferredName,
+           c.Twitter
     FROM Sales.Customers AS c
     INNER JOIN [Application].Cities AS ct
     ON c.DeliveryCityID = ct.CityID
