@@ -9,7 +9,8 @@ CREATE TABLE [Warehouse].[VehicleTemperatures]
 [IsCompressed] [bit] NOT NULL,
 [CompressedSensorData] [varbinary] (max) NULL,
 CONSTRAINT [PK_Warehouse_VehicleTemperatures] PRIMARY KEY NONCLUSTERED  ([VehicleTemperatureID])
-) TEXTIMAGE_ON [WWI_InMemory_Data]
+) 
+/* TEXTIMAGE_ON [WWI_InMemory_Data] */
 WITH
 (
 MEMORY_OPTIMIZED = ON
