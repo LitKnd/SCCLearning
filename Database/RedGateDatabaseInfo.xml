@@ -57,9 +57,10 @@
     <DataWriteAllFilesInOneDirectory>True</DataWriteAllFilesInOneDirectory>
   </WriteToFileOptions>
   <DataFileSet>
-    <Count>3</Count>
+    <Count>4</Count>
     <DataFile>Application.Countries_Data.sql</DataFile>
     <DataFile>Application.StateProvinces_Data.sql</DataFile>
     <DataFile>Application.Cities_Data.sql</DataFile>
+    <DataFile>Application.People_Data.sql</DataFile>
   </DataFileSet>
 </DatabaseInformation>
